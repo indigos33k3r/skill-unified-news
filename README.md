@@ -67,6 +67,7 @@ Plays the latest hour news via audio source
 
 
         # feeds made as properties to simplify logic
+
         @property
         def npr_feed(self):
             data = feedparser.parse(
@@ -84,6 +85,7 @@ Plays the latest hour news via audio source
 
         @property
         def default_feed(self):
+
             # check if user configured a default feed
             if self.settings.get("default_feed", ""):
                 return self.settings["default_feed"]
@@ -95,6 +97,7 @@ Plays the latest hour news via audio source
                 return "tsf"
 
 * optionally make an intent if you made the .vocab
+
 
         @intent_handler(IntentBuilder("ABCNewsIntent").require(
             "ABC").require("news").optionally("play"))
