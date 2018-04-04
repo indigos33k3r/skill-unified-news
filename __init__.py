@@ -58,6 +58,7 @@ class UnifiedNewsSkill(MycroftSkill):
         if AudioService:
             self.audioservice = AudioService(self.emitter)
 
+
     def play_news(self, feed=None, utterance=None):
         """
         for provided news feed:
@@ -89,7 +90,7 @@ class UnifiedNewsSkill(MycroftSkill):
                                       feed+".dialog")
             # if feed specific dialog exists use it
             if exists(specialized_dialog):
-                self.speak_dialog(specialized_dialog)
+                self.speak_dialog(feed+".dialog")
             else:
                 # else use default dialog
                 self.speak_dialog('news', {"feed": feed})
@@ -341,6 +342,7 @@ class UnifiedNewsSkill(MycroftSkill):
             self.play_news(feed)
 
         self.register_intent(intent, news_handler)
+
 
 def create_skill():
     return UnifiedNewsSkill()
