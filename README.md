@@ -1,5 +1,9 @@
 ## Generic news skill
 
+Plays the latest hour news via audio source
+
+## Description
+
 Choose default news station based on your location, or you can configure it in settings
 
 You can request the following news stations:
@@ -12,10 +16,6 @@ You can request the following news stations:
 * [NPR](https://www.npr.org/)
 * [RNE](http://www.rtve.es/radio/)
 * [TSF](http://tsf.pt)
-
-## Description
-
-Plays the latest hour news via audio source
 
 ## Examples
 
