@@ -4,14 +4,14 @@ Choose default news station based on your location, or you can configure it in s
 
 You can request the following news stations:
 
-    - ABC
-    - BBC
-    - CBC
-    - FOX
-    - GBP
-    - NPR
-    - RNE
-    - TSF
+* [ABC](http://radio.abc.net.au/help/streams)
+* [BBC](https://www.bbc.com/news)
+* [CBC](http://www.cbc.ca/news)
+* [FOX](http://www.foxnews.com/)
+* [GBP](http://www.gpb.org/)
+* [NPR](https://www.npr.org/)
+* [RNE](http://www.rtve.es/radio/)
+* [TSF](http://tsf.pt)
 
 ## Description
 
@@ -33,10 +33,11 @@ Plays the latest hour news via audio source
 
 * finish adding parsing for default feed by location
 * settingsmeta.json for web config
+* world news station as a default's default
 
 ## Add a new news station
 
-* optionally make station_name.vocab
+* optionally make station_name.vocab, add station names and country if desired
 
     tsf.voc
 
@@ -45,7 +46,7 @@ Plays the latest hour news via audio source
         portuguese
         portugal
 
-* optionally make station_name.dialog
+* optionally make station_name.dialog if you want customized dialog
 
     tsf.dialog
 
@@ -80,7 +81,7 @@ Plays the latest hour news via audio source
             if feed == "npr":
                 self.feeds[feed] = self.npr_feed
 
-* optionally add to default feed logic in line 133 (default_feed property)
+* optionally add to default feed logic in line 133 (default_feed property), if it should be auto selected in some country
 
 
         @property
@@ -96,7 +97,7 @@ Plays the latest hour news via audio source
             elif self.country_name.lower() == "portugal":
                 return "tsf"
 
-* optionally make an intent if you made the .vocab
+* optionally make an intent if you made the .vocab, else fuzzy match will be used
 
 
         @intent_handler(IntentBuilder("ABCNewsIntent").require(

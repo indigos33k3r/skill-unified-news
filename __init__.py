@@ -150,10 +150,14 @@ class UnifiedNewsSkill(MycroftSkill):
             return "npr"
         elif self.country_name.lower() == "portugal":
             return "tsf"
+        elif self.country_name.lower() == "canada":
+            return "cbc"
         elif self.country.lower() == "au":
             return "abc"
         elif self.country.lower() == "es":
             return "rne"
+        elif self.country.lower() == "uk":
+            return "bbc"
         # TODO news from all the places
 
         # default to official mycroft skill behaviour
@@ -252,48 +256,48 @@ class UnifiedNewsSkill(MycroftSkill):
 
     # intent per news station
     @intent_handler(IntentBuilder("FoxNewsIntent").require(
-        "FOX").require("news").optionally("play"))
+        "FOX").require("news").optionally("play").optionally("latest"))
     def handle_fox_intent(self, message):
         self.play_news("fox")
 
     @intent_handler(IntentBuilder("CBCNewsIntent").require(
-        "CBC").require("news").optionally("play"))
+        "CBC").require("news").optionally("play").optionally("latest"))
     def handle_cbc_intent(self, message):
         self.play_news("cbc")
 
     @intent_handler(IntentBuilder("BBCNewsIntent").require(
-        "BBC").require("news").optionally("play"))
+        "BBC").require("news").optionally("play").optionally("latest"))
     def handle_bbc_intent(self, message):
         self.play_news("bbc")
 
     @intent_handler(IntentBuilder("GBPNewsIntent").require(
-        "GBP").require("news").optionally("play"))
+        "GBP").require("news").optionally("play").optionally("latest"))
     def handle_gbp_intent(self, message):
         self.play_news("gbp")
 
     @intent_handler(IntentBuilder("NPRNewsIntent").require(
-            "NPR").require("news").optionally("play"))
+            "NPR").require("news").optionally("play").optionally("latest"))
     def handle_npr_intent(self, message):
         self.play_news("npr")
 
     @intent_handler(IntentBuilder("TSFNewsIntent").require(
-            "TSF").require("news").optionally("play"))
+            "TSF").require("news").optionally("play").optionally("latest"))
     def handle_tsf_intent(self, message):
         self.play_news("tsf")
 
     @intent_handler(IntentBuilder("RNENewsIntent").require(
-        "RNE").require("news").optionally("play"))
+        "RNE").require("news").optionally("play").optionally("latest"))
     def handle_rne_intent(self, message):
         self.play_news("rne")
 
     @intent_handler(IntentBuilder("ABCNewsIntent").require(
-        "ABC").require("news").optionally("play"))
+        "ABC").require("news").optionally("play").optionally("latest"))
     def handle_abc_intent(self, message):
         self.play_news("abc")
 
-    # if not station specified fuzzy match
+    # generic news intents
     @intent_handler(IntentBuilder("GenericNewsIntent").require("news")
-                    .optionally("play"))
+                    .optionally("play").optionally("latest"))
     def handle_news_intent(self, message):
         # clean a bit the utterance
         remainder = message.utterance_remainder()
@@ -311,6 +315,7 @@ class UnifiedNewsSkill(MycroftSkill):
         if was_playing:
             self.speak_dialog('news.stop')
         else:
+            # be funny if you were told to stop news without them playing
             self.speak_dialog('news.stop.error')
 
     def stop(self):
@@ -325,6 +330,17 @@ class UnifiedNewsSkill(MycroftSkill):
                 was_playing = True
         return was_playing
 
+    # WIP zone
+    def generate_intent(self, feed):
+        """ auto generate intents from .voc files """
+        name = feed.upper() + "NewsIntent"
+        intent = IntentBuilder(name).require(feed).require(
+            "news").optionally("play").optionally("latest").build()
+
+        def news_handler(self, message):
+            self.play_news(feed)
+
+        self.register_intent(intent, news_handler)
 
 def create_skill():
     return UnifiedNewsSkill()
