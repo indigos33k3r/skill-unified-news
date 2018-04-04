@@ -53,58 +53,61 @@ Plays the latest hour news via audio source
 
 * add url to self.feeds dictionary in line 48 (__init__ method)
 
-    def __init__(self):
-        super(UnifiedNewsSkill, self).__init__(name="UnifiedNewsSkill")
-        # static feed urls go here
-        self.feeds = {
-            "abc": "http://live-radio02.mediahubaustralia.com/PBW/mp3/",
-            # keys are used for fuzzy match when no intent matches
-            # optional if you add it to update_feed_url
-            "bbc": ""}
+
+        def __init__(self):
+            super(UnifiedNewsSkill, self).__init__(name="UnifiedNewsSkill")
+            # static feed urls go here
+            self.feeds = {
+                "abc": "http://live-radio02.mediahubaustralia.com/PBW/mp3/",
+                # keys are used for fuzzy match when no intent matches
+                # optional if you add it to update_feed_url
+                "bbc": ""}
 
 * add url parsing if needed in line 100 (update_feed_url method)
 
-    # feeds made as properties to simplify logic
-    @property
-    def npr_feed(self):
-        data = feedparser.parse(
-            "http://www.npr.org/rss/podcast.php?id=500005")
-        url = re.sub('https', 'http', data['entries'][0]['links'][0]['href'])
-        return url
 
-    # urls that need updating at runtime go here
-    def update_feed_url(self, feed):
-        if feed == "npr":
-            self.feeds[feed] = self.npr_feed
+        # feeds made as properties to simplify logic
+        @property
+        def npr_feed(self):
+            data = feedparser.parse(
+                "http://www.npr.org/rss/podcast.php?id=500005")
+            url = re.sub('https', 'http', data['entries'][0]['links'][0]['href'])
+            return url
+
+        # urls that need updating at runtime go here
+        def update_feed_url(self, feed):
+            if feed == "npr":
+                self.feeds[feed] = self.npr_feed
 
 * optionally add to default feed logic in line 133 (default_feed property)
 
-    @property
-    def default_feed(self):
-        # check if user configured a default feed
-        if self.settings.get("default_feed", ""):
-            return self.settings["default_feed"]
 
-        # select feed by country
-        if self.country.lower() == "us":
-            return "npr"
-        elif self.country_name.lower() == "portugal":
-            return "tsf"
+        @property
+        def default_feed(self):
+            # check if user configured a default feed
+            if self.settings.get("default_feed", ""):
+                return self.settings["default_feed"]
+
+            # select feed by country
+            if self.country.lower() == "us":
+                return "npr"
+            elif self.country_name.lower() == "portugal":
+                return "tsf"
 
 * optionally make an intent if you made the .vocab
 
-    @intent_handler(IntentBuilder("ABCNewsIntent").require(
-        "ABC").require("news").optionally("play"))
-    def handle_abc_intent(self, message):
-        self.play_news("abc")
+        @intent_handler(IntentBuilder("ABCNewsIntent").require(
+            "ABC").require("news").optionally("play"))
+        def handle_abc_intent(self, message):
+            self.play_news("abc")
 
 ## Credits
 
-JarbasAI
-[MycroftAI](https://github.com/MycroftAI/skill-npr-news)
-[KathyReid](https://github.com/KathyReid/skill-australian-news)
-[ReK2Fernandez](https://github.com/ReK2Fernandez/skill-radio-rne)
-[JosiahDub](https://github.com/JosiahDub/skill-gpb-news)
-[WalterKlosse](https://github.com/WalterKlosse/mycroft-skill-bbc-news)
-[chrison999](https://github.com/chrison999/mycroft-skill-cbc-news)
+* JarbasAI
+* [MycroftAI](https://github.com/MycroftAI/skill-npr-news)
+* [KathyReid](https://github.com/KathyReid/skill-australian-news)
+* [ReK2Fernandez](https://github.com/ReK2Fernandez/skill-radio-rne)
+* [JosiahDub](https://github.com/JosiahDub/skill-gpb-news)
+* [WalterKlosse](https://github.com/WalterKlosse/mycroft-skill-bbc-news)
+* [chrison999](https://github.com/chrison999/mycroft-skill-cbc-news)
 
