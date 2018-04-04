@@ -1,0 +1,23 @@
+{
+ "name": "Mycroft Unified News Player",
+ "skillMetadata": {
+        "sections": [
+            {
+                "name": "Configuration",
+                "fields": [
+                    {
+                        "type": "label",
+                        "label": "By default this skill chooses a news source from your location, you can manually set a preferred news source here"
+                    },
+                    {
+                        "name": "default_feed",
+                        "type": "text",
+                        "label": "default feed",
+                        "value": ""
+                    }
+                ]
+            }
+        ]
+    }
+
+}

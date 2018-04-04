@@ -31,7 +31,6 @@ You can request the following news stations:
 
 ## TODO
 
-* settingsmeta.json for web config
 * adding more default feeds by location
 * world news station as a default's default
 
