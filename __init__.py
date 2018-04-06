@@ -58,7 +58,6 @@ class UnifiedNewsSkill(MycroftSkill):
         if AudioService:
             self.audioservice = AudioService(self.emitter)
 
-
     def play_news(self, feed=None, utterance=None):
         """
         for provided news feed:
@@ -81,30 +80,26 @@ class UnifiedNewsSkill(MycroftSkill):
             LOG.warning("bad news feed chosen, using default")
             feed = self.default_feed
         self.update_feed_url(feed)
-        try:
-            url = self.feeds[feed]
-            # if news is already playing, stop it silently
-            self.stop()
-            # speak news intro
-            specialized_dialog = join(self.root_dir, 'dialog', self.lang,
-                                      feed+".dialog")
-            # if feed specific dialog exists use it
-            if exists(specialized_dialog):
-                self.speak_dialog(feed+".dialog")
-            else:
-                # else use default dialog
-                self.speak_dialog('news', {"feed": feed})
-            # Pause for the intro, then start the new stream
-            wait_while_speaking()
-            # if audio service module is available use it
-            if self.audioservice:
-                self.audioservice.play(url, utterance)
-            else:
-                # othervice use normal mp3 playback
-                self.process = play_mp3(url)
-
-        except Exception as e:
-            LOG.error("Error: {0}".format(e))
+        url = self.feeds[feed]
+        # if news is already playing, stop it silently
+        self.stop()
+        # speak news intro
+        specialized_dialog = join(self.root_dir, 'dialog', self.lang,
+                                  feed+".dialog")
+        # if feed specific dialog exists use it
+        if exists(specialized_dialog):
+            self.speak_dialog(feed+".dialog")
+        else:
+            # else use default dialog
+            self.speak_dialog('news', {"feed": feed})
+        # Pause for the intro, then start the new stream
+        wait_while_speaking()
+        # if audio service module is available use it
+        if self.audioservice:
+            self.audioservice.play(url, utterance)
+        else:
+            # othervice use normal mp3 playback
+            self.process = play_mp3(url)
 
     def update_feed_url(self, feed):
         """ updates news stream url before playing """
