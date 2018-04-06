@@ -46,6 +46,8 @@ class UnifiedNewsSkill(MycroftSkill):
         # static feed urls go here
         self.feeds = {
             "abc": "http://live-radio02.mediahubaustralia.com/PBW/mp3/",
+            "nos": "https://download.omroep.nl/nos/radionieuws"
+                   "/nosnieuws_bulalg.mp3",
             # optional, keys are used for fuzzy match when no intent matches
             "bbc": "",
             "cbc": "",
@@ -150,6 +152,8 @@ class UnifiedNewsSkill(MycroftSkill):
             return "cbc"
         elif self.country.lower() == "au":
             return "abc"
+        elif self.country.lower() == "nl":
+            return "dutch"
         elif self.country.lower() == "es":
             return "rne"
         elif self.country.lower() == "uk":
@@ -290,6 +294,11 @@ class UnifiedNewsSkill(MycroftSkill):
         "ABC").require("news").optionally("play").optionally("latest"))
     def handle_abc_intent(self, message):
         self.play_news("abc")
+
+    @intent_handler(IntentBuilder("NOSNewsIntent").require(
+        "NOS").require("news").optionally("play").optionally("latest"))
+    def handle_abc_intent(self, message):
+        self.play_news("nos")
 
     # generic news intents
     @intent_handler(IntentBuilder("GenericNewsIntent").require("news")

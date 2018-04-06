@@ -13,6 +13,7 @@ You can request the following news stations:
 * [CBC](http://www.cbc.ca/news)
 * [FOX](http://www.foxnews.com/)
 * [GBP](http://www.gpb.org/)
+* [NOS](https://www.nporadio1.nl/nos-radio-1-journaal)
 * [NPR](https://www.npr.org/)
 * [RNE](http://www.rtve.es/radio/)
 * [TSF](http://tsf.pt)
