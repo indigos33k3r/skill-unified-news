@@ -1,2 +1,2 @@
-Here is the top of the hour news from { feed }.
-Here is this hour's news from { feed }.
+Here is the top of the hour news from {{ feed }}.
+Here is this hour's news from {{ feed }}.
