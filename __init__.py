@@ -55,6 +55,8 @@ class UnifiedNewsSkill(MycroftSkill):
             "tsf": "",
             "fox": "",
             "rne": ""}
+        if "force_http" not in self.settings:
+            self.settings["force_http"] = True
 
     def initialize(self):
         if AudioService:
@@ -120,6 +122,9 @@ class UnifiedNewsSkill(MycroftSkill):
             self.feeds[feed] = self.gbp_feed
         elif feed == "rne":
             self.feeds[feed] = self.rne_feed
+        if self.settings["force_http"]:
+            for feed in self.feeds:
+                self.feeds[feed] = self.feeds[feed].replace("https", "http")
 
     # choose default feed based on current location
     @property
