@@ -24,6 +24,7 @@ from mycroft.skills.core import MycroftSkill, intent_handler, dig_for_message
 from mycroft.util.log import LOG
 from mycroft.util.parse import match_one
 from mycroft.audio import wait_while_speaking
+import random
 try:
     from mycroft.skills.audioservice import AudioService
 except:
@@ -306,6 +307,11 @@ class UnifiedNewsSkill(MycroftSkill):
         self.play_news("nos")
 
     # generic news intents
+    @intent_handler(IntentBuilder("randomNewsIntent").require(
+        "random").require("news").optionally("play").optionally("latest"))
+    def handle_random_intent(self, message):
+        self.play_news(random.choice(self.feeds.keys()))
+
     @intent_handler(IntentBuilder("GenericNewsIntent").require("news")
                     .optionally("play").optionally("latest"))
     def handle_news_intent(self, message):

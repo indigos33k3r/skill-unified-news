@@ -28,6 +28,7 @@ You can request the following news stations:
 * "tell me bbc news"
 * "play the australian news"
 * "spanish news"
+* "random news station"
 
 
 ## TODO
