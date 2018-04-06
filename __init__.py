@@ -326,7 +326,7 @@ class UnifiedNewsSkill(MycroftSkill):
     def stop(self):
         was_playing = False
         if self.audioservice:
-            was_playing = self.audioservice.is_playing()
+            was_playing = self.audioservice.is_playing
             self.audioservice.stop()
         else:
             if self.process and self.process.poll() is None:
