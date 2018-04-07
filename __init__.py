@@ -102,7 +102,7 @@ class UnifiedNewsSkill(MycroftSkill):
         # Pause for the intro, then start the new stream
         wait_while_speaking()
         # if audio service module is available use it
-        if self.audioservice:
+        if self.audioservice and self.settings["use_audio_service"]:
             self.audioservice.play(url, utterance)
         else:
             # othervice use normal mp3 playback
