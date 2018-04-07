@@ -24,6 +24,16 @@
                         "type": "checkbox",
                         "label": "force_http",
                         "value": "true"
+                    },
+                    {
+                        "type": "label",
+                        "label": "By default this skill uses audio service, you may not want this depending on your audio setup"
+                    },
+                    {
+                        "name": "use_audio_service",
+                        "type": "checkbox",
+                        "label": "use_audio_service",
+                        "value": "true"
                     }
                 ]
             }

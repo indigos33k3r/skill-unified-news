@@ -58,9 +58,11 @@ class UnifiedNewsSkill(MycroftSkill):
             "rne": ""}
         if "force_http" not in self.settings:
             self.settings["force_http"] = True
+        if "use_audio_service" not in self.settings:
+            self.settings["use_audio_service"] = True
 
     def initialize(self):
-        if AudioService:
+        if AudioService and self.settings["use_audio_service"]:
             self.audioservice = AudioService(self.emitter)
 
     def play_news(self, feed=None, utterance=None):
