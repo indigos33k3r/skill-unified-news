@@ -88,6 +88,8 @@ class UnifiedNewsSkill(MycroftSkill):
             feed = self.default_feed
         self.update_feed_url(feed)
         url = self.feeds[feed]
+        if self.settings["force_http"]:
+            url = url.replace("https", "http")
         # if news is already playing, stop it silently
         self.stop()
         # speak news intro
@@ -125,9 +127,6 @@ class UnifiedNewsSkill(MycroftSkill):
             self.feeds[feed] = self.gbp_feed
         elif feed == "rne":
             self.feeds[feed] = self.rne_feed
-        if self.settings["force_http"]:
-            for feed in self.feeds:
-                self.feeds[feed] = self.feeds[feed].replace("https", "http")
 
     # choose default feed based on current location
     @property
