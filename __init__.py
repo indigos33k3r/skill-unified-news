@@ -254,6 +254,8 @@ class UnifiedNewsSkill(MycroftSkill):
             # try to go back 3 hours until news are found
             fails += 1
             hour = str(int(hour) - 1)
+            if "-" in hour:
+                hour = "23"
         raise AssertionError("could not find url for latest news")
 
     @property
