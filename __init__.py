@@ -176,7 +176,7 @@ class UnifiedNewsSkill(MycroftSkill):
     def rne_feed(self):
         data = feedparser.parse(
             "http://api.rtve.es/api/programas/36019/audios.rs")
-        url = re.sub('https', 'http', data['entries'][0]['links'][0]['href'])
+        url = data['entries'][0]['links'][0]['href']
         return url
 
     @property
@@ -191,27 +191,30 @@ class UnifiedNewsSkill(MycroftSkill):
         # If you know a better source for the latest news mp3, let me know.
         mp3_find = re.search('href="(?P<mp3>.+\.mp3)"', html.content)
         # Replace https with http because AudioService can't handle it
-        url = mp3_find.group("mp3").replace("https", "http")
+        if mp3_find is None:
+            LOG.error("could not get gbp news feed")
+            return ""
+        url = mp3_find.group("mp3")
         return url
 
     @property
     def bbc_feed(self):
         data = feedparser.parse("http://feeds.bbci.co.uk/news/rss.xml")
-        url = re.sub('https', 'http', data['entries'][0]['links'][0]['href'])
+        url = data['entries'][0]['links'][0]['href']
         return url
 
     @property
     def cbc_feed(self):
         data = feedparser.parse(
             "http://www.cbc.ca/podcasting/includes/hourlynews.xml")
-        url = re.sub('https', 'http', data['entries'][0]['links'][0]['href'])
+        url = 'http', data['entries'][0]['links'][0]['href']
         return url
 
     @property
     def npr_feed(self):
         data = feedparser.parse(
             "http://www.npr.org/rss/podcast.php?id=500005")
-        url = re.sub('https', 'http', data['entries'][0]['links'][0]['href'])
+        url = data['entries'][0]['links'][0]['href']
         return url
 
     @property
@@ -255,12 +258,13 @@ class UnifiedNewsSkill(MycroftSkill):
             hour = str(int(hour) - 1)
             if "-" in hour:
                 hour = "23"
-        raise AssertionError("could not find url for latest news")
+        LOG.error("could not find url for latest news")
+        return ""
 
     @property
     def fox_feed(self):
         data = feedparser.parse("http://feeds.foxnewsradio.com/FoxNewsRadio")
-        url = re.sub('https', 'http', data['entries'][0]['links'][0]['href'])
+        url = data['entries'][0]['links'][0]['href']
         return url
 
     # intent per news station
