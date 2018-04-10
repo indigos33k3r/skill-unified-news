@@ -18,6 +18,10 @@ You can request the following news stations:
 * [RNE](http://www.rtve.es/radio/)
 * [TSF](http://tsf.pt)
 
+
+Uses [AudioSkill](https://github.com/JarbasAl/mycroft_jarbas_utils/blob/master/mycroft_jarbas_utils/skills/audio.md)
+
+
 ## Examples
 
 * "news"

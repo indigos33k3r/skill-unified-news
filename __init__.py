@@ -20,10 +20,9 @@ import feedparser
 import re
 from os.path import exists
 from adapt.intent import IntentBuilder
-from mycroft.skills.core import MycroftSkill, intent_handler, dig_for_message
+from mycroft.skills.core import intent_handler
 from mycroft.util.log import LOG
 from mycroft.util.parse import match_one
-from mycroft.audio import wait_while_speaking
 import random
 try:
     from mycroft.skills.audioservice import AudioService
@@ -35,15 +34,15 @@ from os.path import join
 from datetime import datetime
 import requests
 from requests.exceptions import ConnectionError, ReadTimeout
+from mycroft_jarbas_utils.skills.audio import AudioSkill
+
 
 __author__ = "jarbas"
 
 
-class UnifiedNewsSkill(MycroftSkill):
+class UnifiedNewsSkill(AudioSkill):
     def __init__(self):
         super(UnifiedNewsSkill, self).__init__(name="UnifiedNewsSkill")
-        self.process = None
-        self.audioservice = None
         # static feed urls go here
         self.feeds = {
             "abc": "http://live-radio02.mediahubaustralia.com/PBW/mp3/",
@@ -56,16 +55,8 @@ class UnifiedNewsSkill(MycroftSkill):
             "tsf": "",
             "fox": "",
             "rne": ""}
-        if "force_http" not in self.settings:
-            self.settings["force_http"] = True
-        if "use_audio_service" not in self.settings:
-            self.settings["use_audio_service"] = True
 
-    def initialize(self):
-        if AudioService and self.settings["use_audio_service"]:
-            self.audioservice = AudioService(self.emitter)
-
-    def play_news(self, feed=None, utterance=None):
+    def play_news(self, feed=None):
         """
         for provided news feed:
                 update url,
@@ -76,13 +67,6 @@ class UnifiedNewsSkill(MycroftSkill):
                 play news audio
         """
         feed = feed or self.default_feed
-        if utterance is None:
-            message = dig_for_message()
-            if message:
-                utterance = message.data['utterance']
-            else:
-                utterance = ""
-        self.update_feed_url(feed)
         if feed not in self.feeds:
             LOG.warning("bad news feed chosen, using default")
             feed = self.default_feed
@@ -101,14 +85,7 @@ class UnifiedNewsSkill(MycroftSkill):
         else:
             # else use default dialog
             self.speak_dialog('news', {"feed": feed})
-        # Pause for the intro, then start the new stream
-        wait_while_speaking()
-        # if audio service module is available use it
-        if self.audioservice and self.settings["use_audio_service"]:
-            self.audioservice.play(url, utterance)
-        else:
-            # othervice use normal mp3 playback
-            self.process = play_mp3(url)
+        self.play(url)
 
     def update_feed_url(self, feed):
         """ updates news stream url before playing """
@@ -343,14 +320,16 @@ class UnifiedNewsSkill(MycroftSkill):
 
     def stop(self):
         was_playing = False
-        if self.audioservice:
-            was_playing = self.audioservice.is_playing
-            self.audioservice.stop()
-        else:
-            if self.process and self.process.poll() is None:
-                self.process.terminate()
-                self.process.wait()
-                was_playing = True
+        self.enclosure.activate_mouth_events()
+        self.enclosure.mouth_reset()
+        if self.settings["use_audio_service"]:
+            was_playing = self.audio.is_playing
+            if was_playing:
+                self.audio.stop()
+        if self.process and self.process.poll() is None:
+            self.process.terminate()
+            self.process.wait()
+            was_playing = True
         return was_playing
 
     # WIP zone
@@ -360,7 +339,7 @@ class UnifiedNewsSkill(MycroftSkill):
         intent = IntentBuilder(name).require(feed).require(
             "news").optionally("play").optionally("latest").build()
 
-        def news_handler(self, message):
+        def news_handler(message, dummy=""):
             self.play_news(feed)
 
         self.register_intent(intent, news_handler)
