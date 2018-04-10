@@ -17,7 +17,7 @@
                     },
                     {
                         "type": "label",
-                        "label": "By default this skill converts https links to http, you may not want this depending on your audio setup"
+                        "label": "Convert https links to http"
                     },
                     {
                         "name": "force_http",
@@ -27,13 +27,23 @@
                     },
                     {
                         "type": "label",
-                        "label": "By default this skill uses audio service, you may not want this depending on your audio setup"
+                        "label": "Use audio service, if not using AudioService command line will be used"
                     },
                     {
                         "name": "use_audio_service",
                         "type": "checkbox",
                         "label": "use_audio_service",
                         "value": "true"
+                    },
+                    {
+                        "type": "label",
+                        "label": "Default AudioService backend to use"
+                    },
+                    {
+                        "name": "default_backend",
+                        "type": "text",
+                        "label": "default_backend",
+                        "value": "vlc"
                     }
                 ]
             }
