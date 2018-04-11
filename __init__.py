@@ -81,6 +81,8 @@ class UnifiedNewsSkill(AudioSkill):
             self.speak_dialog('news', {"feed": feed})
         if url:
             self.play(url)
+        else:
+            self.speak_dialog('news.error', {"feed": feed})
 
     def update_feed_url(self, feed):
         """ updates news stream url before playing """
