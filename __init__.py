@@ -24,12 +24,6 @@ from mycroft.skills.core import intent_handler
 from mycroft.util.log import LOG
 from mycroft.util.parse import match_one
 import random
-try:
-    from mycroft.skills.audioservice import AudioService
-except:
-    from mycroft.util import play_mp3
-    AudioService = None
-
 from os.path import join
 from datetime import datetime
 import requests
@@ -85,7 +79,8 @@ class UnifiedNewsSkill(AudioSkill):
         else:
             # else use default dialog
             self.speak_dialog('news', {"feed": feed})
-        self.play(url)
+        if url:
+            self.play(url)
 
     def update_feed_url(self, feed):
         """ updates news stream url before playing """
@@ -211,7 +206,7 @@ class UnifiedNewsSkill(AudioSkill):
         status = 404
         fails = 0
         timeout = 0.5
-        while status == 404 and fails <= 3:
+        while status == 404 and fails <= 6:
             url = join("https://www.tsf.pt/stream/audio/",
                        year, month, "noticias", day, "not" + hour + ".mp3")
             try:
@@ -230,11 +225,17 @@ class UnifiedNewsSkill(AudioSkill):
             except Exception as e:
                 # should not happen
                 print e
-            # try to go back 3 hours until news are found
+            # try to go back 6 hours until news are found
             fails += 1
             hour = str(int(hour) - 1)
             if "-" in hour:
                 hour = "23"
+                day = str(int(day) - 1)
+                if "-" in day or day == "0":
+                    day = "31"
+                    month = str(int(month) - 1)
+                    if month == "0" or "-" in month:
+                        month = "12"
         LOG.error("could not find url for latest news")
         return ""
 
