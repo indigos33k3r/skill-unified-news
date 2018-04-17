@@ -173,9 +173,11 @@ class UnifiedNewsSkill(AudioSkill):
 
     @property
     def bbc_feed(self):
+        # TODO fix me
         data = feedparser.parse("http://feeds.bbci.co.uk/news/rss.xml")
+        print data
         url = data['entries'][0]['links'][0]['href']
-        return url
+        return None
 
     @property
     def cbc_feed(self):
@@ -238,6 +240,12 @@ class UnifiedNewsSkill(AudioSkill):
                     month = str(int(month) - 1)
                     if month == "0" or "-" in month:
                         month = "12"
+            if len(month) == 1:
+                month = "0" + month
+            if len(day) == 1:
+                day = "0" + day
+            if len(hour) == 1:
+                hour = "0" + hour
         LOG.error("could not find url for latest news")
         return ""
 
@@ -258,8 +266,8 @@ class UnifiedNewsSkill(AudioSkill):
     def handle_cbc_intent(self, message):
         self.play_news("cbc")
 
-    @intent_handler(IntentBuilder("BBCNewsIntent").require(
-        "BBC").require("news").optionally("play").optionally("latest"))
+    #@intent_handler(IntentBuilder("BBCNewsIntent").require(
+    #    "BBC").require("news").optionally("play").optionally("latest"))
     def handle_bbc_intent(self, message):
         self.play_news("bbc")
 
